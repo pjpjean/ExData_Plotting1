@@ -8,6 +8,10 @@ filename <- "household_power_consumption.txt"
 stopifnot(file.exists(filename))
 
 # I have decided to use fread {package data.table} because is fast.
+# First I read only the Date column (~ 8Mb instead of ~ 126Mb for the
+# full dataset) to find out where the lines of specified dates are
+# (thanks to the fact that they are contiguous). After that, I read
+# a filtered dataset setting fread's skip and nrow parameters. 
 # It returns a data.table object though, so I convert it to data.frame,
 # which I'm more familiar with.
 library(data.table)
@@ -42,7 +46,9 @@ household$Date <- as.Date(household$Date, "%d/%m/%Y")
 rm(hh.dates)
 rm(hh.colnames)
 
-# Plot 4
+# ---------------------------------------------------------------------
+# Creating plot #4
+# ---------------------------------------------------------------------
 cat("Creating plot 4...\n")
 
 # set locale to get weekdays in English
@@ -51,15 +57,18 @@ Sys.setlocale("LC_TIME","C")
 
 png("plot4.png", width=480, height=480)
 
+# set a 2x2 plot grid
 oldpar_mfcol <- par("mfcol")
 par(mfcol = c(2,2))
 
+# top-left plot
 plot(x=household$Time,
      y=household$Global_active_power,
      type="l",
      xlab="",
      ylab="Global Active Power (kilowatts)")
 
+# bottom-left plot
 plot(x=household$Time,
      y=household$Sub_metering_1,
      type="l",
@@ -80,18 +89,21 @@ legend("topright",
        col = c("black", "red", "blue"), 
        legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
+# top-right plot	   
 plot(x=household$Time,
      y=household$Voltage,
      type="l",
      xlab="datetime",
      ylab="Voltage")
 
+# bottom-right plot
 plot(x=household$Time,
      y=household$Global_reactive_power,
      type="l",
      xlab="datetime",
      ylab="Global_reactive_power")
 
+# restore graphic device parameters
 par(mfcol = oldpar_mfcol)
 dev.off()
 

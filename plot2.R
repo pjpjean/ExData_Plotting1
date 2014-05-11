@@ -8,6 +8,10 @@ filename <- "household_power_consumption.txt"
 stopifnot(file.exists(filename))
 
 # I have decided to use fread {package data.table} because is fast.
+# First I read only the Date column (~ 8Mb instead of ~ 126Mb for the
+# full dataset) to find out where the lines of specified dates are
+# (thanks to the fact that they are contiguous). After that, I read
+# a filtered dataset setting fread's skip and nrow parameters. 
 # It returns a data.table object though, so I convert it to data.frame,
 # which I'm more familiar with.
 library(data.table)
@@ -43,7 +47,9 @@ rm(hh.dates)
 rm(hh.colnames)
 
 
-# Plot 2
+# ---------------------------------------------------------------------
+# Creating plot #2
+# ---------------------------------------------------------------------
 cat("Creating plot 2...\n")
 # set locale to get weekdays in English
 oldLC_TIME <- Sys.getlocale("LC_TIME")
