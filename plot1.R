@@ -29,7 +29,7 @@ household <- fread(filename, sep=";", na.strings="?",
 hh.colnames <- colnames(fread(filename, sep=";", nrow=1))
 setnames(household, hh.colnames)
 
-# just to make sure it has no 
+# just to make sure it has no wrong dates
 if (!all(household$Date == "1/2/2007" | household$Date == "2/2/2007"))
   household <- household[household$Date == "1/2/2007" | household$Date == "2/2/2007", ]
 
